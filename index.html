@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Every Pokémon sprite, rebuilt in 3D voxels. PokéAPI and Three.js." />
+    <title>Voxel Pokédex</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><rect x='2' y='2' width='12' height='6' fill='%23e3350d'/><rect x='2' y='8' width='12' height='6' fill='%23f2f2f2'/><rect x='2' y='7' width='12' height='2' fill='%23222'/><rect x='6' y='6' width='4' height='4' fill='%23222'/><rect x='7' y='7' width='2' height='2' fill='%23fff'/></svg>" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <div id="backdrop"></div>
+    <canvas id="scene"></canvas>
+
+    <aside class="panel" id="dex">
+      <header>
+        <h1>Voxel Pokédex</h1>
+        <button id="collapse" class="icon" aria-label="Collapse the Pokédex" title="Collapse">–</button>
+      </header>
+      <div class="body">
+        <form id="search-form" class="search" autocomplete="off">
+          <input id="search" type="search" list="species-names" placeholder="Name or number…" aria-label="Search Pokémon" />
+          <datalist id="species-names"></datalist>
+        </form>
+        <div class="nav">
+          <button id="prev" title="Previous (←)">‹ Prev</button>
+          <button id="random" title="Random (R)">🎲 Random</button>
+          <button id="next" title="Next (→)">Next ›</button>
+        </div>
+
+        <article id="entry" aria-live="polite">
+          <div class="title">
+            <span id="dex-number" class="mono muted"></span>
+            <h2 id="name">Loading…</h2>
+          </div>
+          <div id="genus" class="muted"></div>
+          <div id="types" class="types"></div>
+          <p id="flavor"></p>
+          <dl class="measures">
+            <div><dt>Height</dt><dd id="height">–</dd></div>
+            <div><dt>Weight</dt><dd id="weight">–</dd></div>
+          </dl>
+          <h3>Base stats</h3>
+          <div id="stats" class="stats"></div>
+          <h3>Evolution</h3>
+          <div id="evolution" class="evolution"></div>
+          <p id="voxel-info" class="muted small mono"></p>
+        </article>
+      </div>
+    </aside>
+
+    <aside class="panel" id="settings" hidden>
+      <h2>Settings</h2>
+      <label class="field">
+        <span>Sprite style</span>
+        <select data-setting="style" id="style"></select>
+      </label>
+      <label class="check"><input type="checkbox" data-setting="shiny" /> Shiny <kbd>S</kbd></label>
+      <label class="field">
+        <span>Transition</span>
+        <select data-setting="transition">
+          <option value="explode">Explode and reassemble</option>
+          <option value="morph">Morph</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>Inflation <span class="muted">(flat → round)</span></span>
+        <input type="range" min="0" max="1.5" step="0.05" data-setting="inflate" />
+      </label>
+      <label class="check"><input type="checkbox" data-setting="autoRotate" /> Turntable <kbd>A</kbd></label>
+      <label class="check"><input type="checkbox" data-setting="cries" /> Play cries</label>
+      <p class="muted small">
+        <kbd>←</kbd><kbd>→</kbd> browse · <kbd>R</kbd> random · <kbd>B</kbd> burst · <kbd>/</kbd> search ·
+        <kbd>F</kbd> fullscreen. Click the Pokémon to poke it.
+      </p>
+    </aside>
+
+    <div id="top-buttons">
+      <button id="burst" class="round" aria-label="Burst (B)" title="Burst (B)">✸</button>
+      <button id="settings-toggle" class="round" aria-label="Settings" title="Settings">⚙</button>
+      <button id="fullscreen" class="round" aria-label="Fullscreen (F)" title="Fullscreen (F)">⛶</button>
+    </div>
+
+    <div id="loading" hidden aria-hidden="true"></div>
+    <div id="toast" role="status" aria-live="polite" hidden>
+      <span class="msg"></span>
+      <button class="icon" aria-label="Dismiss">×</button>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
